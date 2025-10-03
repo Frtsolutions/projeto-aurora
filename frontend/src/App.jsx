@@ -11,7 +11,7 @@ function App() {
   const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/products/')
+    axios.get('${import.meta.env.VITE_API_URL}/api/products/')
       .then(response => setProducts(response.data))
       .catch(error => console.error('Erro ao buscar os produtos:', error));
   }, []);
@@ -21,7 +21,7 @@ function App() {
   };
 
   const handleDeleteProduct = (productId) => {
-    axios.delete(`http://localhost:8000/api/products/${productId}/`)
+    axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${productId}/`)
       .then(() => setProducts(products.filter(product => product.id !== productId)))
       .catch(error => console.error('Erro ao deletar o produto:', error));
   };

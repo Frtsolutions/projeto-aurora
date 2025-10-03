@@ -18,7 +18,7 @@ function EditProductForm({ product, onProductUpdated, onCancel }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const updatedProduct = { name, cost_price: costPrice, selling_price: sellingPrice, stock_quantity: stockQuantity };
-    axios.put(`http://localhost:8000/api/products/${product.id}/`, updatedProduct)
+    axios.put(`${import.meta.env.VITE_API_URL}/api/products/${product.id}/`, updatedProduct)
       .then(response => onProductUpdated(response.data))
       .catch(error => console.error('Erro ao atualizar o produto:', error));
   };
