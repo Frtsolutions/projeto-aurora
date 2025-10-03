@@ -116,5 +116,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configuração do CORS para produção (vamos ajustar depois se necessário)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Para desenvolvimento local
-    # A URL da Vercel será adicionada aqui depois
+    "https://projeto-aurora-one.vercel.app"
 ]
