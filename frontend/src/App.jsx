@@ -1,22 +1,20 @@
-// frontend/src/App.jsx
-
+// frontend/src/App.jsx (Final)
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css';
+import styles from './App.module.css'; // Usando nosso novo CSS Module
 import ProductForm from './components/ProductForm';
-import EditProductForm from './components/EditProductForm'; // 1. Importa o novo formulário
+import EditProductForm from './components/EditProductForm';
+import ProductItem from './components/ProductItem'; // Importa o ProductItem
 
 function App() {
   const [products, setProducts] = useState([]);
-  const [editingProduct, setEditingProduct] = useState(null); // 2. Novo estado para controlar a edição
+  const [editingProduct, setEditingProduct] = useState(null);
 
-  const fetchProducts = () => {
+  useEffect(() => {
     axios.get('http://localhost:8000/api/products/')
-      .then(response => { setProducts(response.data); })
-      .catch(error => { console.error('Erro ao buscar os produtos:', error); });
-  };
-
-  useEffect(() => { fetchProducts(); }, []);
+      .then(response => setProducts(response.data))
+      .catch(error => console.error('Erro ao buscar os produtos:', error));
+  }, []);
 
   const handleProductCreated = (newProduct) => {
     setProducts([...products, newProduct]);
@@ -24,50 +22,44 @@ function App() {
 
   const handleDeleteProduct = (productId) => {
     axios.delete(`http://localhost:8000/api/products/${productId}/`)
-      .then(() => {
-        setProducts(products.filter(product => product.id !== productId));
-      })
-      .catch(error => { console.error('Erro ao deletar o produto:', error); });
+      .then(() => setProducts(products.filter(product => product.id !== productId)))
+      .catch(error => console.error('Erro ao deletar o produto:', error));
   };
 
-  // 3. Função chamada quando o formulário de edição é salvo
   const handleProductUpdated = (updatedProduct) => {
     setProducts(products.map(p => (p.id === updatedProduct.id ? updatedProduct : p)));
-    setEditingProduct(null); // Fecha o formulário de edição
+    setEditingProduct(null);
   };
 
   return (
-    <div>
-      <h1>Projeto Aurora - Gestão de Estoque</h1>
+    <div className={styles.container}>
+      <header>
+        <h1>Projeto Aurora - Gestão de Estoque</h1>
+      </header>
+      <main>
+        {editingProduct ? (
+          <EditProductForm
+            product={editingProduct}
+            onProductUpdated={handleProductUpdated}
+            onCancel={() => setEditingProduct(null)}
+          />
+        ) : (
+          <ProductForm onProductCreated={handleProductCreated} />
+        )}
 
-      {/* 4. Lógica para mostrar um formulário ou outro */}
-      {editingProduct ? (
-        <EditProductForm
-          product={editingProduct}
-          onProductUpdated={handleProductUpdated}
-          onCancel={() => setEditingProduct(null)}
-        />
-      ) : (
-        <ProductForm onProductCreated={handleProductCreated} />
-      )}
-
-      <hr />
-      <h2>Lista de Produtos</h2>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            {product.name} - R$ {product.selling_price} (Estoque: {product.stock_quantity})
-
-            {/* 5. Botões de Editar e Excluir */}
-            <button onClick={() => setEditingProduct(product)} style={{ marginLeft: '10px' }}>
-              Editar
-            </button>
-            <button onClick={() => handleDeleteProduct(product.id)} style={{ marginLeft: '10px' }}>
-              Excluir
-            </button>
-          </li>
-        ))}
-      </ul>
+        <hr />
+        <h2>Lista de Produtos</h2>
+        <ul className={styles.productList}>
+          {products.map(product => (
+            <ProductItem
+              key={product.id}
+              product={product}
+              onEdit={setEditingProduct}
+              onDelete={handleDeleteProduct}
+            />
+          ))}
+        </ul>
+      </main>
     </div>
   );
 }

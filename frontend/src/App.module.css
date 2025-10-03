@@ -1,0 +1,13 @@
+/* frontend/src/App.module.css */
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: sans-serif;
+  color: #333;
+}
+
+.productList {
+  list-style-type: none;
+  padding: 0;
+}

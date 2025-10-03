@@ -1,0 +1,49 @@
+/* frontend/src/components/Form.module.css */
+
+.formContainer {
+  background-color: #f9f9f9;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  margin-bottom: 32px;
+}
+
+.formContainer h3 {
+  margin-top: 0;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.formGrid input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Importante para o padding não quebrar o layout */
+}
+
+.formActions {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.formActions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+}
+
+.formActions button[type="submit"] {
+  background-color: #2c6cb0;
+}
+
+.formActions button[type="button"] {
+  background-color: #a0aec0;
+}
