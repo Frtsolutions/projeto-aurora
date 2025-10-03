@@ -23,7 +23,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Hosts permitidos. Deixaremos em branco por enquanto, o Render gerencia isso.
+# backend/settings.py
+
 ALLOWED_HOSTS = []
+
+# Adiciona o host do Render à lista de hosts permitidos, se estiver em produção
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
