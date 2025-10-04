@@ -1,4 +1,6 @@
-export default function SaleCart({ cartItems, onRemoveFromCart }) {
+// pdv-desktop/src/components/SaleCart.jsx (Atualizado)
+
+export default function SaleCart({ cartItems, onRemoveFromCart, onFinalizeSale }) {
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.product.selling_price * item.quantity), 0).toFixed(2);
   };
@@ -11,10 +13,23 @@ export default function SaleCart({ cartItems, onRemoveFromCart }) {
     borderBottom: '1px solid #f0f0f0'
   };
 
+  const finalizeButtonStyle = {
+    width: '100%',
+    padding: '16px',
+    fontSize: '1.2em',
+    fontWeight: 'bold',
+    color: 'white',
+    backgroundColor: '#28a745',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginTop: '20px'
+  };
+
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <h3>Venda Atual</h3>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <ul style={{ listStyle: 'none', padding: 0, flexGrow: 1, overflowY: 'auto' }}>
         {cartItems.map(item => (
           <li key={item.product.id} style={itemStyle}>
             <div>
@@ -28,7 +43,14 @@ export default function SaleCart({ cartItems, onRemoveFromCart }) {
         ))}
       </ul>
       <hr />
-      <h3>Total: R$ {calculateTotal()}</h3>
+      <h2>Total: R$ {calculateTotal()}</h2>
+      <button
+        style={finalizeButtonStyle}
+        onClick={onFinalizeSale}
+        disabled={cartItems.length === 0}
+      >
+        Finalizar Venda
+      </button>
     </div>
   );
 }
