@@ -1,4 +1,4 @@
-const Dotenv = require('dotenv-webpack'); // 1. Importamos o plugin
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   module: {
@@ -16,9 +16,20 @@ module.exports = {
           }
         }
       },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            },
+          },
+        ],
+      },
     ],
   },
-  // 2. Adicionamos a seção de plugins para carregar o .env
   plugins: [
     new Dotenv()
   ],
