@@ -97,4 +97,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",                 # Para o template antigo com Vite
     "http://localhost:3000",                 # Adicione esta linha para o Webpack
     "https://projeto-aurora-one.vercel.app", # Para o site online na Vercel
+# Teste de deploy automático.
 ]
