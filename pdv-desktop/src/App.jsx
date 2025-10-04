@@ -7,7 +7,6 @@ function App() {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
 
-  // Busca os produtos da API quando o app inicia
   useEffect(() => {
     const apiUrl = `${import.meta.env.VITE_API_URL}/api/products/`;
     axios.get(apiUrl)

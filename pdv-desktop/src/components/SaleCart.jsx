@@ -3,8 +3,8 @@ export default function SaleCart({ cartItems }) {
     <div>
       <h3>Venda Atual</h3>
       <ul>
-        {cartItems.map((item, index) => (
-          <li key={`${item.id}-${index}`}>
+        {cartItems.map(item => (
+          <li key={item.id}>
             {item.name} - R$ {item.selling_price}
           </li>
         ))}
