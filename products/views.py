@@ -27,3 +27,11 @@ def create_superuser_view(request):
         return HttpResponse("Superusuário criado com sucesso!")
     else:
         return HttpResponse("Superusuário já existe.")
+    # products/views.py
+
+from django.http import JsonResponse
+
+# ... suas outras views existentes ...
+
+def health_check_view(request):
+    return JsonResponse({"status": "ok", "message": "Backend is running!"})
