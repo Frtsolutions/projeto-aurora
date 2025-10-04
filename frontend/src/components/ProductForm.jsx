@@ -11,7 +11,7 @@ function ProductForm({ onProductCreated }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const newProduct = { name, cost_price: costPrice, selling_price: sellingPrice, stock_quantity: stockQuantity };
-    axios.post('import.meta.env.VITE_API_URL/api/products/', newProduct)
+    axios.post('${import.meta.env.VITE_API_URL}/api/products/', newProduct)
       .then(response => {
         onProductCreated(response.data);
         setName(''); setCostPrice(''); setSellingPrice(''); setStockQuantity('');
