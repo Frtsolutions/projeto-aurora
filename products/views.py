@@ -1,3 +1,5 @@
+# products/views.py (VERSÃO CORRIGIDA E COMPLETA)
+
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -17,7 +19,15 @@ class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-# --- VIEW DA API DE VENDAS ---
+# --- VIEWS DA API DE VENDAS ---
+class SaleListAPIView(generics.ListAPIView):
+    queryset = Sale.objects.all().order_by('-created_at')
+    serializer_class = SaleSerializer
+
+class SaleDetailAPIView(generics.RetrieveAPIView):
+    queryset = Sale.objects.all()
+    serializer_class = SaleSerializer
+
 class SaleCreateAPIView(APIView):
     def post(self, request):
         items_data = request.data.get('items')
@@ -28,24 +38,17 @@ class SaleCreateAPIView(APIView):
 
         try:
             with transaction.atomic():
-                # 1. Cria o registro da Venda principal
                 sale = Sale.objects.create(total_amount=total_amount)
 
-                # 2. Loop para criar os Itens da Venda e atualizar o estoque
                 for item_data in items_data:
                     product_id = item_data['product']['id']
                     quantity_sold = item_data['quantity']
 
-                    # Usamos select_for_update() para "travar" a linha do produto no banco de dados,
-                    # evitando que duas vendas aconteçam ao mesmo tempo e gerem inconsistência de estoque.
                     product = Product.objects.select_for_update().get(id=product_id)
 
-                    # Verifica se há estoque suficiente
                     if product.stock_quantity < quantity_sold:
-                        # Se não houver, a transação inteira é desfeita (rollback)
                         raise Exception(f"Estoque insuficiente para o produto: {product.name}")
 
-                    # Cria o registro do item vendido
                     SaleItem.objects.create(
                         sale=sale,
                         product=product,
@@ -53,20 +56,16 @@ class SaleCreateAPIView(APIView):
                         price_at_sale=product.selling_price
                     )
 
-                    # 3. Atualiza (diminui) a quantidade em estoque do produto
                     product.stock_quantity -= quantity_sold
                     product.save()
 
-            # Se tudo correu bem, prepara a resposta de sucesso com os dados da venda criada
-            serializer = SaleSerializer(sale)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                serializer = SaleSerializer(sale)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except Product.DoesNotExist:
             return Response({"error": "Um dos produtos na venda não foi encontrado."}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            # Qualquer outra exceção (como a de estoque insuficiente) será capturada aqui
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 # --- VIEWS DE AJUDA/DEBUG ---
 def create_superuser_view(request):

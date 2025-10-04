@@ -1,5 +1,6 @@
+# products/serializers.py (versão atualizada)
+
 from rest_framework import serializers
-# A linha abaixo foi corrigida para incluir Sale e SaleItem
 from .models import Product, Sale, SaleItem
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -8,19 +9,18 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SaleItemSerializer(serializers.ModelSerializer):
-    # Para evitar enviar o objeto de produto inteiro, vamos usar um campo mais simples
-    product_id = serializers.IntegerField()
+    # Novo campo para mostrar o nome do produto na leitura da API
+    product_name = serializers.CharField(source='product.name', read_only=True)
 
     class Meta:
         model = SaleItem
-        fields = ['product_id', 'quantity'] # Simplificado para receber dados
+        # Adicionamos 'product_name' à lista de campos
+        fields = ['product', 'product_name', 'quantity', 'price_at_sale']
 
 class SaleSerializer(serializers.ModelSerializer):
-    items = SaleItemSerializer(many=True)
+    # Agora, ao ler uma venda, os itens virão formatados pelo SaleItemSerializer acima
+    items = SaleItemSerializer(many=True, read_only=True)
 
     class Meta:
         model = Sale
         fields = ['id', 'total_amount', 'created_at', 'items']
-
-    # O 'create' pertence à View, então removemos a lógica daqui
-    # para manter o serializer simples.
