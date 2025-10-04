@@ -1,16 +1,24 @@
-# Python / Django
-venv/
-__pycache__/
-*.pyc
-db.sqlite3
-
-# Node / React
-node_modules/
-build/
-dist/
-.npm/
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-# Arquivo de ambiente local
-.env
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
