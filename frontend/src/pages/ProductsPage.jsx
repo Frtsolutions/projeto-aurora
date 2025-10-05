@@ -7,13 +7,11 @@ import ProductItem from '../components/ProductItem';
 export default function ProductsPage() {
     const [products, setProducts] = useState([]);
     const [editingProduct, setEditingProduct] = useState(null);
-
     const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
     const fetchProducts = () => {
-        const apiUrl = `${apiBaseUrl}/api/products/products/`;
-        
-        axios.get(apiUrl)
+        // CORREÇÃO FINAL DA URL
+        axios.get(`${apiBaseUrl}/api/products/`)
             .then(response => {
                 setProducts(response.data.results || []);
             })
@@ -23,20 +21,11 @@ export default function ProductsPage() {
             });
     };
 
-    // A PEÇA QUE FALTAVA ESTÁ AQUI:
-    // Este useEffect garante que a função fetchProducts() seja chamada
-    // assim que o componente for montado na tela.
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
-    const handleProductCreated = (newProduct) => {
-        fetchProducts();
-    };
+    useEffect(() => { fetchProducts(); }, []);
+    const handleProductCreated = () => { fetchProducts(); };
 
     const handleDeleteProduct = (productId) => {
-        const apiUrl = `${apiBaseUrl}/api/products/products/${productId}/`;
-        axios.delete(apiUrl)
+        axios.delete(`${apiBaseUrl}/api/products/${productId}/`)
             .then(() => setProducts(products.filter(product => product.id !== productId)))
             .catch(error => console.error('Erro ao deletar o produto:', error));
     };
@@ -49,11 +38,7 @@ export default function ProductsPage() {
     return (
         <>
             {editingProduct ? (
-                <EditProductForm
-                    product={editingProduct}
-                    onProductUpdated={handleProductUpdated}
-                    onCancel={() => setEditingProduct(null)}
-                />
+                <EditProductForm product={editingProduct} onProductUpdated={handleProductUpdated} onCancel={() => setEditingProduct(null)} />
             ) : (
                 <ProductForm onProductCreated={handleProductCreated} />
             )}
@@ -61,12 +46,7 @@ export default function ProductsPage() {
             <h2>Lista de Produtos</h2>
             <ul style={{ listStyle: 'none', padding: 0 }}>
                 {Array.isArray(products) && products.map(product => (
-                    <ProductItem
-                        key={product.id}
-                        product={product}
-                        onEdit={setEditingProduct}
-                        onDelete={handleDeleteProduct}
-                    />
+                    <ProductItem key={product.id} product={product} onEdit={setEditingProduct} onDelete={handleDeleteProduct} />
                 ))}
             </ul>
         </>

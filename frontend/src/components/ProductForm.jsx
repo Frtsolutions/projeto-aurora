@@ -7,17 +7,14 @@ export default function ProductForm({ onProductCreated }) {
     const [costPrice, setCostPrice] = useState('');
     const [sellingPrice, setSellingPrice] = useState('');
     const [stockQuantity, setStockQuantity] = useState('');
-
     const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const newProduct = { name, cost_price: costPrice, selling_price: sellingPrice, stock_quantity: stockQuantity };
         
-        // --- A URL CORRETA E DEFINITIVA ---
-        const apiUrl = `${apiBaseUrl}/api/products/products/`;
-
-        axios.post(apiUrl, newProduct)
+        // CORREÇÃO FINAL DA URL
+        axios.post(`${apiBaseUrl}/api/products/`, newProduct)
             .then(response => {
                 onProductCreated(response.data);
                 setName(''); setCostPrice(''); setSellingPrice(''); setStockQuantity('');

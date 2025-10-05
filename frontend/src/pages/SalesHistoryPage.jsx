@@ -5,13 +5,13 @@ export default function SalesHistoryPage() {
     const [sales, setSales] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
     useEffect(() => {
-        axios.get(`${apiBaseUrl}/api/products/sales/`)
+        // CORREÇÃO FINAL DA URL
+        axios.get(`${apiBaseUrl}/api/sales/`)
             .then(response => {
-                setSales(response.data);
+                setSales(response.data.results); // Supondo que a API de vendas também seja paginada
                 setLoading(false);
             })
             .catch(err => {
