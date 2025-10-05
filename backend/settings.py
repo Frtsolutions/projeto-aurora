@@ -1,5 +1,3 @@
-# backend/settings.py (VERSÃO CORRETA PARA O TESTE)
-
 from pathlib import Path
 import os
 import dj_database_url
@@ -20,21 +18,23 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # Application definition
 INSTALLED_APPS = [
-    'products',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # Django precisa disso para o collectstatic
     'rest_framework',
-     'corsheaders',
+    'corsheaders',
+    'products', # Nosso app
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
+    # Middleware do WhiteNoise, logo após o SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -85,17 +85,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 
+# --- NOVAS CONFIGURAÇÕES DE ARQUIVOS ESTÁTICOS PARA PRODUÇÃO (WHITENOISE) ---
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# --- FIM DAS NOVAS CONFIGURAÇÕES ---
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuração do CORS para produção (vamos ajustar depois se necessário)
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5173",
-#     "https://projeto-aurora-one.vercel.app"
-# ]
+# Configuração do CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",                 # Para o template antigo com Vite
-    "http://localhost:3000",                 # Adicione esta linha para o Webpack
-    "https://projeto-aurora-one.vercel.app", # Para o site online na Vercel
-# Teste de deploy automático.
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://projeto-aurora-one.vercel.app", # Substitua se sua URL da Vercel for outra
 ]
